@@ -25,8 +25,9 @@ async function tick(
 }
 
 async function main(): Promise<void> {
-    const binanceClient = new BinanceClient(process.env.BINANCE_API_KEY, process.env.BINANCE_API_SECRET);
-    const telegramClient = new TelegramClient(process.env.TELEGRAM_TOKEN, process.env.TELEGRAM_CHANNEL, true);
+    const isDebug = true;
+    const binanceClient = new BinanceClient(process.env.BINANCE_API_KEY, process.env.BINANCE_API_SECRET, isDebug);
+    const telegramClient = new TelegramClient(process.env.TELEGRAM_TOKEN, process.env.TELEGRAM_CHANNEL, isDebug);
 
     const messages: Message[] = [
         new NewPosition(binanceClient, telegramClient),

@@ -6,7 +6,7 @@ import {Position} from '../../types/position';
 class BinanceClient {
     private connection: ccxt.Exchange;
 
-    constructor(apiKey: string, secret: string) {
+    constructor(apiKey: string, secret: string, isDebug = false) {
         this.connection = new ccxt.binance({
             apiKey,
             secret,
@@ -15,7 +15,10 @@ class BinanceClient {
             },
             enableRateLimit: true,
         });
-        this.connection.setSandboxMode(true);
+
+        if (isDebug) {
+            this.connection.setSandboxMode(true);
+        }
     }
 
     async getCoinList(): Promise<string[]> {
