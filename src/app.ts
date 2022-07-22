@@ -14,7 +14,7 @@ let positions = new Map<string, Position>();
 async function tick(
     binanceClient: BinanceClient,
     messages: Message[],
-): Promise<void> {
+) {
     const newOpenPositions = await binanceClient.getOpenPositions();
     
     messages.forEach((message) => {
@@ -24,7 +24,7 @@ async function tick(
     positions = newOpenPositions;
 }
 
-async function main(): Promise<void> {
+async function main() {
     const isDebug = true;
     const binanceClient = new BinanceClient(process.env.BINANCE_API_KEY, process.env.BINANCE_API_SECRET, isDebug);
     const telegramClient = new TelegramClient(process.env.TELEGRAM_TOKEN, process.env.TELEGRAM_CHANNEL, isDebug);
@@ -36,7 +36,7 @@ async function main(): Promise<void> {
 
     while (true) {
         console.log('tick');
-        
+
         tick(binanceClient, messages);
         await sleep(1000);
     }

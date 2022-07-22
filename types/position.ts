@@ -1,4 +1,4 @@
-export interface Position {
+export interface CCXTPosition {
     info: object;
     id: string;
     symbol: string;
@@ -22,4 +22,13 @@ export interface Position {
     liquidationPrice: number;
     marginMode: string;
     percentage: number;
+}
+
+export interface Position {
+    symbol: string;
+    side: 'long' | 'short';
+    amount: number;
+    entryPrice: number;
+    leverage: number;
+    isolatedMargin: number;
 }

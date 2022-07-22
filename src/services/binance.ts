@@ -1,6 +1,7 @@
 import * as ccxt from 'ccxt';
 
-import {Position} from '../../types/position';
+import {Order} from '../../types/order';
+import {CCXTPosition, Position} from '../../types/position';
 
 
 class BinanceClient {
@@ -30,7 +31,7 @@ class BinanceClient {
         return coinList;
     }
 
-    getPositions(): Promise<Position[]> {
+    private getPositions(): Promise<CCXTPosition[]> {
         return this.connection.fetchPositions();
     }
 
@@ -40,7 +41,14 @@ class BinanceClient {
         
         positions.forEach((position) => {
             if (Number(position.info['positionAmt']) !== 0) {
-                openOpsitions.set(position.symbol, position);
+                openOpsitions.set(position.symbol, {
+                    symbol: position.symbol,
+                    side: position.side,
+                    amount: position.info['positionAmt'],
+                    entryPrice: position.entryPrice,
+                    leverage: position.leverage,
+                    isolatedMargin: position.info["isolatedMargin"],
+                });
             }
         });
 
@@ -53,8 +61,16 @@ class BinanceClient {
         return Number(balance?.total?.USDT ?? 0);
     }
 
-    getOpenOrders(symbol: string) {
-        return this.connection.fetchOpenOrders(symbol);
+    async getOpenOrders(symbol: string): Promise<Order[]> {
+        const openOrders = await this.connection.fetchOpenOrders(symbol);
+
+        return openOrders.map(order => ({
+            symbol: order.symbol,
+            stopPrice: order.info.stopPrice,
+            amount: order.amount,
+            price: order.price,
+            side: order.side,
+        }));
     }
 }
 
